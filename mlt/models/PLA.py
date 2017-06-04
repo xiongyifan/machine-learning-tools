@@ -1,7 +1,9 @@
 from .Model import Model
-import utils
 import numpy as np
-import mlt
+from mlt.utils import weight
+from mlt.stats import scores
+from mlt.utils import random
+
 
 class PLA(Model):
 
@@ -16,10 +18,10 @@ class PLA(Model):
     def fit(self, X, Y):
         m, n = X.shape
 
-        order = utils.get_order(self.order, m)
+        order = random.get_order(self.order, m)
 
         if self.w is None:
-            self.w = utils.init_w(n)
+            self.w = weight.init_zeros(n)
 
         is_all_x_right = False
         correct_num = 0
@@ -35,7 +37,7 @@ class PLA(Model):
                     self.w = self.w + self.learning_rate * y * x
                     self.halt_step += 1
                     correct_num = 0
-                    print('the training accuracy is ', mlt.stats.cal_accuracy(X, Y, self.w))
+                    print('the training accuracy is ', scores.cal_accuracy(X, Y, self.w))
                 else:
                     correct_num += 1
 
@@ -45,7 +47,7 @@ class PLA(Model):
 
         print('-------------------------------------')
         print('total halt_step is ', self.halt_step)
-        print('the training accuracy is ', mlt.stats.cal_accuracy(X, Y, self.w))
+        print('the training accuracy is ', scores.cal_accuracy(X, Y, self.w))
         print('-------------------------------------')
 
         return self

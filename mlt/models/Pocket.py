@@ -1,15 +1,17 @@
 import numpy as np
-import utils
+from mlt.utils import weight
+from mlt.utils import random
+from mlt.stats import scores
 
 
 def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_test=None, y_test=None):
     m, n = x_train.shape
 
-    order = utils.get_order(order, m)
+    order = random.get_order(order, m)
 
-    w = utils.init_w(n)
+    w = weight.init_zeros(n)
 
-    w_bast = utils.init_w(n)
+    w_bast = weight.init_zeros(n)
 
     is_all_x_right = False
     halt_step = 0
@@ -27,13 +29,13 @@ def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_
             if y_pred != y:
                 w = w + learning_rate * y * x
                 halt_step += 1
-                accuracy_bast = utils.cal_accuracy(x_train, y_train, w_bast)
-                accuracy = utils.cal_accuracy(x_train, y_train, w)
+                accuracy_bast = scores.cal_accuracy(x_train, y_train, w_bast)
+                accuracy = scores.cal_accuracy(x_train, y_train, w)
                 if accuracy > accuracy_bast:
                     w_bast = w
                 correct_num = 0
 
-                utils.verification(x_train, y_train, x_test, y_test, w_bast)
+                scores.verification(x_train, y_train, x_test, y_test, w_bast)
 
             else:
                 correct_num += 1
@@ -44,7 +46,7 @@ def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_
 
     print('-------------------------------------')
     print('total halt_step is ', halt_step)
-    print('the training accuracy is ', utils.cal_accuracy(x_train, y_train, w_bast))
+    print('the training accuracy is ', scores.cal_accuracy(x_train, y_train, w_bast))
     print('-------------------------------------')
 
     return w_bast, halt_step
