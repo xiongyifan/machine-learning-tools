@@ -27,9 +27,9 @@ class Pocket(PLA):
         """
         m, n = X.shape
 
-        order = random.generate_sequence(self.order, m)
+        order = random.generate_sequence(self._order, m)
 
-        self.w = self._init_weight(w, weight.init_zeros, n)
+        self._w = self._init_weight(w, weight.init_zeros, n)
 
         w_bast = weight.init_zeros(n)
 
@@ -46,7 +46,7 @@ class Pocket(PLA):
                 y_predict = self._decision_function(x_one)
 
                 if y_predict != y_one:
-                    w += self.learning_rate * y_one * x_one
+                    w += self._learning_rate * y_one * x_one
                     self._halt_step += 1
                     accuracy_bast = scores.cal_accuracy(X, y, w_bast)
                     accuracy = scores.cal_accuracy(X, y, w)
@@ -56,12 +56,12 @@ class Pocket(PLA):
                 else:
                     correct_num += 1
 
-                if correct_num == m or self.halt_step == self.correct_times:
+                if correct_num == m or self.halt_step_ == self._correct_times:
                     is_all_x_right = True
                     break
 
         print('-------------------------------------')
-        print('total _halt_step is ', self.halt_step)
+        print('total _halt_step is ', self.halt_step_)
         print('the training accuracy is ', scores.cal_accuracy(X, y, w_bast))
         print('-------------------------------------')
 
