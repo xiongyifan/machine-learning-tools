@@ -1,54 +1,68 @@
 """class Pocket"""
 
-import numpy as np
 from mlt.utils import weight
 from mlt.utils import random
 from mlt.stats import scores
+from .pla import PLA
 
 
-def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_test=None, y_test=None):
-    m, n = x_train.shape
+class Pocket(PLA):
+    """Pocket model"""
 
-    order = random.generate_sequence(order, m)
+    def __init__(self, order='sequence', correct_times=-1, learning_rate=1.0):
+        super().__init__(order, correct_times, learning_rate)
 
-    w = weight.init_zeros(n)
+    def fit(self, X, y, w):
+        """Fit Pocket model
 
-    w_bast = weight.init_zeros(n)
+        Parameters
+        ----------
+        X : pd.DataFrame
+        y : pd.DataFrame
+        w : ndarray
 
-    is_all_x_right = False
-    halt_step = 0
-    correct_num = 0
+        Returns
+        -------
+        self
+        """
+        m, n = X.shape
 
-    while is_all_x_right is not True:
+        order = random.generate_sequence(self._order, m)
 
-        for i in order:
-            x = x_train[i]
+        self._w = self._init_weight(w, weight.init_zeros, n)
 
-            y = y_train[i]
+        w_bast = weight.init_zeros(n)
 
-            y_pred = np.sign(x.dot(w)) # todo: change the name
+        is_all_x_right = False
+        correct_num = 0
 
-            if y_pred != y:
-                w = w + learning_rate * y * x
-                halt_step += 1
-                accuracy_bast = scores.cal_accuracy(x_train, y_train, w_bast)
-                accuracy = scores.cal_accuracy(x_train, y_train, w)
-                if accuracy > accuracy_bast:
-                    w_bast = w
-                correct_num = 0
+        while is_all_x_right is not True:
 
-                scores.verification(x_train, y_train, x_test, y_test, w_bast)
+            for i in order:
+                x_one = X[i]
 
-            else:
-                correct_num += 1
+                y_one = y[i]
 
-            if correct_num == m or halt_step == correct_times:
-                is_all_x_right = True
-                break
+                y_predict = self._decision_function(x_one)
 
-    print('-------------------------------------')
-    print('total halt_step is ', halt_step)
-    print('the training accuracy is ', scores.cal_accuracy(x_train, y_train, w_bast))
-    print('-------------------------------------')
+                if y_predict != y_one:
+                    w += self._learning_rate * y_one * x_one
+                    self._halt_step += 1
+                    accuracy_bast = scores.cal_accuracy(X, y, w_bast)
+                    accuracy = scores.cal_accuracy(X, y, w)
+                    if accuracy > accuracy_bast:
+                        w_bast = w
+                    correct_num = 0
+                else:
+                    correct_num += 1
 
-    return w_bast, halt_step
+                if correct_num == m or self.halt_step_ == self._correct_times:
+                    is_all_x_right = True
+                    break
+
+        print('-------------------------------------')
+        print('total _halt_step is ', self.halt_step_)
+        print('the training accuracy is ', scores.cal_accuracy(X, y, w_bast))
+        print('-------------------------------------')
+
+        return self
