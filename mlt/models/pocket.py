@@ -1,3 +1,5 @@
+"""class Pocket"""
+
 import numpy as np
 from mlt.utils import weight
 from mlt.utils import random
@@ -7,7 +9,7 @@ from mlt.stats import scores
 def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_test=None, y_test=None):
     m, n = x_train.shape
 
-    order = random.get_order(order, m)
+    order = random.generate_sequence(order, m)
 
     w = weight.init_zeros(n)
 
@@ -24,7 +26,7 @@ def Pocket(x_train, y_train, order=None, correct_times=-1, learning_rate=1.0, x_
 
             y = y_train[i]
 
-            y_pred = np.sign(x.dot(w))
+            y_pred = np.sign(x.dot(w)) # todo: change the name
 
             if y_pred != y:
                 w = w + learning_rate * y * x

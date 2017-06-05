@@ -1,8 +1,16 @@
+"""summary data"""
+
 import pandas as pd
 import numpy as np
 
 
-def summary_data(data: pd.DataFrame):
+def summary_data(data):
+    """summary the data
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+    """
     m, n = data.shape
     null_count = data.isnull().sum()
     null_percentage = null_count / pd.Series(np.ones([n]) * m, index=null_count.index)

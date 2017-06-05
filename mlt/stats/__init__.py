@@ -1,2 +1,1 @@
-from .summary import *
-from .scores import *
+"""all of them about statistics"""

@@ -1,2 +1,4 @@
-from .PLA import PLA
-from .Pocket import Pocket
+"""all of the learning models"""
+
+from .pla import PLA
+from .pocket import Pocket
