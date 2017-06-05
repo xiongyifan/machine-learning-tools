@@ -1,11 +1,16 @@
-from .Model import Model
+"""class PLA"""
+
 import numpy as np
+import pandas as pd
+
 from mlt.utils import weight
 from mlt.stats import scores
 from mlt.utils import random
+from .model import Model
 
 
 class PLA(Model):
+    """PLA algorithm"""
 
     halt_step = 0
 
@@ -13,12 +18,25 @@ class PLA(Model):
         self.order = order
         self.correct_times = correct_times
         self.learning_rate = learning_rate
-        self.w = w
+        self.w = w  # todo: w should not be a variable. it should be a parameter
 
-    def fit(self, X, Y):
+    def fit(self, X, y):
+        """Fit PLA model.
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            Training data
+        y : pd.DataFrame
+            Target values
+
+        Returns
+        -------
+
+        """
         m, n = X.shape
 
-        order = random.get_order(self.order, m)
+        order = random.generate_sequence(self.order, m)
 
         if self.w is None:
             self.w = weight.init_zeros(n)
@@ -29,15 +47,15 @@ class PLA(Model):
         while is_all_x_right is not True:
 
             for i in order:
-                x = X[i]
-                y = Y[i]
-                y_pred = np.sign(x.dot(self.w))
+                x_one = X[i]
+                y_one = y[i]
+                y_predict = np.sign(x_one.dot(self.w))
 
-                if y_pred != y:
-                    self.w = self.w + self.learning_rate * y * x
+                if y_predict != y_one:
+                    self.w = self.w + self.learning_rate * y_one * x_one
                     self.halt_step += 1
                     correct_num = 0
-                    print('the training accuracy is ', scores.cal_accuracy(X, Y, self.w))
+                    print('the training accuracy is ', scores.cal_accuracy(X, y, self.w))
                 else:
                     correct_num += 1
 
@@ -47,7 +65,7 @@ class PLA(Model):
 
         print('-------------------------------------')
         print('total halt_step is ', self.halt_step)
-        print('the training accuracy is ', scores.cal_accuracy(X, Y, self.w))
+        print('the training accuracy is ', scores.cal_accuracy(X, y, self.w))
         print('-------------------------------------')
 
         return self
