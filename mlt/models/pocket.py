@@ -29,8 +29,7 @@ class Pocket(PLA):
 
         order = random.generate_sequence(self.order, m)
 
-        if w is None:
-            w = weight.init_zeros(n)
+        self.w = self._init_weight(w, weight.init_zeros, n)
 
         w_bast = weight.init_zeros(n)
 
@@ -48,7 +47,7 @@ class Pocket(PLA):
 
                 if y_predict != y_one:
                     w += self.learning_rate * y_one * x_one
-                    self.halt_step += 1
+                    self._halt_step += 1
                     accuracy_bast = scores.cal_accuracy(X, y, w_bast)
                     accuracy = scores.cal_accuracy(X, y, w)
                     if accuracy > accuracy_bast:

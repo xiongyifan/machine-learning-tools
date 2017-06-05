@@ -50,7 +50,7 @@ class PLA(Model):
 
                 if y_predict != y_one:
                     w += self.learning_rate * y_one * x_one
-                    self.halt_step += 1
+                    self._halt_step += 1
                     correct_num = 0
                     print('the training accuracy is ', scores.cal_accuracy(X, y, self.w))
                 else:
