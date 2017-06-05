@@ -12,34 +12,31 @@ from .model import Model
 class PLA(Model):
     """PLA algorithm"""
 
-    halt_step = 0
+    _halt_step = 0
 
-    def __init__(self, w=None, order='sequence', correct_times=-1, learning_rate=1.0):
+    def __init__(self, order='sequence', correct_times=-1, learning_rate=1.0):
         self.order = order
         self.correct_times = correct_times
         self.learning_rate = learning_rate
-        self.w = w  # todo: w should not be a variable. it should be a parameter
 
-    def fit(self, X, y):
+    def fit(self, X, y, w):
         """Fit PLA model.
 
         Parameters
         ----------
         X : pd.DataFrame
-            Training data
         y : pd.DataFrame
-            Target values
+        w : ndarray
 
         Returns
         -------
-
+        self
         """
         m, n = X.shape
 
         order = random.generate_sequence(self.order, m)
 
-        if self.w is None:
-            self.w = weight.init_zeros(n)
+        self.w = self._init_weight(w, weight.init_zeros, n)
 
         is_all_x_right = False
         correct_num = 0
@@ -49,10 +46,10 @@ class PLA(Model):
             for i in order:
                 x_one = X[i]
                 y_one = y[i]
-                y_predict = np.sign(x_one.dot(self.w))
+                y_predict = self._decision_function(x_one)
 
                 if y_predict != y_one:
-                    self.w = self.w + self.learning_rate * y_one * x_one
+                    w += self.learning_rate * y_one * x_one
                     self.halt_step += 1
                     correct_num = 0
                     print('the training accuracy is ', scores.cal_accuracy(X, y, self.w))
@@ -64,8 +61,26 @@ class PLA(Model):
                     break
 
         print('-------------------------------------')
-        print('total halt_step is ', self.halt_step)
+        print('total _halt_step is ', self.halt_step)
         print('the training accuracy is ', scores.cal_accuracy(X, y, self.w))
         print('-------------------------------------')
 
         return self
+
+    def _decision_function(self, x):
+        return np.sign(x.dot(self.w))
+
+    @property
+    def halt_step(self):
+        """the step that the model stopped
+
+        Returns
+        -------
+        int
+
+        Notes
+        -----
+        getter for _halt_step
+        """
+        return self._halt_step
+
