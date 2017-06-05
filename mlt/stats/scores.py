@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from mlt.utils import logger
+
 
 def cal_accuracy(X, y, w):
     """cal accuracy return percentage"""
@@ -17,5 +19,5 @@ def verification(x_train, y_train, x_test, y_test, w):
     """verification the difference from train and test set"""
     accuracy_train = cal_accuracy(x_train, y_train, w)
     accuracy_test = cal_accuracy(x_test, y_test, w)
-    print('train accuracy : ', accuracy_train, '; tests accuracy : ', accuracy_test, '; difference : ',
-          (accuracy_train - accuracy_test))
+    logger.info('train accuracy : ', accuracy_train, '; tests accuracy : ', accuracy_test, '; difference : ',
+                (accuracy_train - accuracy_test))

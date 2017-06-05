@@ -1,11 +1,11 @@
 """class PLA"""
-
 import numpy as np
 import pandas as pd
 
 from mlt.utils import weight
 from mlt.stats import scores
 from mlt.utils import random
+from mlt.utils import logger
 from .model import Model
 
 
@@ -52,7 +52,7 @@ class PLA(Model):
                     w += self._learning_rate * y_one * x_one
                     self._halt_step += 1
                     correct_num = 0
-                    print('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
+                    logger.info('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
                 else:
                     correct_num += 1
 
@@ -60,10 +60,10 @@ class PLA(Model):
                     is_all_x_right = True
                     break
 
-        print('-------------------------------------')
-        print('total _halt_step is ', self.halt_step_)
-        print('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
-        print('-------------------------------------')
+        logger.info('-------------------------------------')
+        logger.info('total _halt_step is ', self.halt_step_)
+        logger.info('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
+        logger.info('-------------------------------------')
 
         return self
 
