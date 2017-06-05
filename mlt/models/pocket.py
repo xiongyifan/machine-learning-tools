@@ -1,4 +1,5 @@
 """class Pocket"""
+from mlt.utils import logger
 
 from mlt.utils import weight
 from mlt.utils import random
@@ -60,9 +61,9 @@ class Pocket(PLA):
                     is_all_x_right = True
                     break
 
-        print('-------------------------------------')
-        print('total _halt_step is ', self.halt_step_)
-        print('the training accuracy is ', scores.cal_accuracy(X, y, w_bast))
-        print('-------------------------------------')
+        logger.info('-------------------------------------')
+        logger.info('total _halt_step is ', self.halt_step_)
+        logger.info('the training accuracy is ', scores.cal_accuracy(X, y, w_bast))
+        logger.info('-------------------------------------')
 
         return self
