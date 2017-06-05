@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from mlt.utils import logger
+from mlt.utils.logging import logger
 
 
 def cal_accuracy(X, y, w):

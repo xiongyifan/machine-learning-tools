@@ -2,6 +2,7 @@
 
 from abc import abstractmethod, ABCMeta
 
+from mlt.utils import weight
 
 class Model(metaclass=ABCMeta):
     """the base of models"""
@@ -9,10 +10,10 @@ class Model(metaclass=ABCMeta):
     _w = None
 
     @abstractmethod
-    def fit(self, X, y, w):
+    def fit(self, X, y, w=None, w_init_func=weight.init_zeros):
         """Fit model"""
 
-    def _init_weight(self, w, func, shape):
+    def _init_weight(self, w, shape, func=weight.init_zeros):
         """initial or set weight"""
         if w is None:
             self._w = func(shape)
