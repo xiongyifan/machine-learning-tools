@@ -7,7 +7,7 @@ from mlt.utils.logging import logger
 
 def cal_accuracy(X, y, w):
     """cal accuracy return percentage"""
-    return np.average(np.sign(X.dot(w)) == y)
+    return np.average(np.sign(X.dot(w)) == y)  # todo: change here to decision function
 
 
 def cal_error_rate(X, Y, w):

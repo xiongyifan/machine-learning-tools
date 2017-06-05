@@ -1,6 +1,6 @@
 """deal with null value"""
 
-from mlt.utils import logger
+from mlt.utils.logging import logger
 import pandas as pd
 
 

@@ -1,16 +1,11 @@
 """class PLA"""
 import numpy as np
-import pandas as pd
 
 from mlt.utils import weight
 from mlt.stats import scores
 from mlt.utils import random
 from mlt.utils.logging import logger
 from .model import Model
-
-# import logging
-
-# logger = logging.getLogger()
 
 
 class PLA(Model):

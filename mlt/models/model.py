@@ -4,6 +4,7 @@ from abc import abstractmethod, ABCMeta
 
 from mlt.utils import weight
 
+
 class Model(metaclass=ABCMeta):
     """the base of models"""
 
