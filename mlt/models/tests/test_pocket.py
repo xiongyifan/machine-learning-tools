@@ -21,9 +21,9 @@ class PocketTestCase(unittest.TestCase):
         times = 2000
         error_rates = np.zeros(times)
         for i in range(times):
-            pocket = Pocket('random', 50, 1)
+            pocket = Pocket(order='random', correct_times=50, learning_rate=1)
             pocket.fit(x_train, y_train)
-            error_rates[i] = scores.cal_error_rate(x_test, y_test, pocket.w_)
+            error_rates[i] = scores.cal_error_rate(pocket.predict(x_test), y_test)
 
         result = np.average(error_rates)
         logger.info('error rate is %f', result)

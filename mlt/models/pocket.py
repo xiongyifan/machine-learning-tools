@@ -10,18 +10,16 @@ from .pla import PLA
 class Pocket(PLA):
     """Pocket model"""
 
-    def __init__(self, order='sequence', correct_times=-1, learning_rate=1.0):
-        super().__init__(order, correct_times, learning_rate)
+    def __init__(self, w=None, order='sequence', correct_times=-1, learning_rate=1.0):
+        super().__init__(w, order, correct_times, learning_rate)
 
-    def fit(self, X, y, w=None, w_init_func=weight.init_zeros):
+    def fit(self, X, y):
         """Fit Pocket model
 
         Parameters
         ----------
         X : ndarray
         y : ndarray
-        w : ndarray
-        w_init_func : ndarray
 
         Returns
         -------
@@ -31,12 +29,13 @@ class Pocket(PLA):
 
         order = random.generate_sequence(self._order, m)
 
-        self._init_weight(w, n, w_init_func)
+        self._init_weight(n)
 
         w_bast = weight.init_zeros(n)
 
         is_all_x_right = False
         correct_num = 0
+        accuracy_bast = 0.0
 
         while is_all_x_right is not True:
 
@@ -50,9 +49,11 @@ class Pocket(PLA):
                 if y_predict != y_one:
                     self._w += self._learning_rate * y_one * x_one
                     self._halt_step += 1
-                    accuracy_bast = scores.cal_accuracy(X, y, w_bast)
-                    accuracy = scores.cal_accuracy(X, y, self.w_)
+                    accuracy = scores.cal_accuracy(self.predict(X), y)
                     if accuracy > accuracy_bast:
+                        # you must use the copy function. because _w is a object.
+                        # if you just do this "w_best = self,_w. you give the address to the w_best"
+                        accuracy_bast = accuracy
                         w_bast = self._w.copy()
                     correct_num = 0
                 else:
@@ -66,7 +67,7 @@ class Pocket(PLA):
 
         logger.info('-------------------------------------')
         logger.info('total _halt_step is %d', self.halt_step_)
-        logger.info('the training accuracy is %s', scores.cal_accuracy(X, y, w_bast))
+        logger.info('the training accuracy is %s', scores.cal_accuracy(self.predict(X), y))
         logger.info('-------------------------------------')
 
         return self
