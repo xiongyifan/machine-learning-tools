@@ -1,11 +1,10 @@
 """class PLA"""
 import numpy as np
-import pandas as pd
 
 from mlt.utils import weight
 from mlt.stats import scores
 from mlt.utils import random
-from mlt.utils import logger
+from mlt.utils.logging import logger
 from .model import Model
 
 
@@ -19,14 +18,15 @@ class PLA(Model):
         self._correct_times = correct_times
         self._learning_rate = learning_rate
 
-    def fit(self, X, y, w):
+    def fit(self, X, y, w=None, w_init_func=weight.init_zeros):
         """Fit PLA model.
 
         Parameters
         ----------
-        X : pd.DataFrame
-        y : pd.DataFrame
+        X : ndarray
+        y : ndarray
         w : ndarray
+        w_init_func : ndarray
 
         Returns
         -------
@@ -36,7 +36,7 @@ class PLA(Model):
 
         order = random.generate_sequence(self._order, m)
 
-        self._w = self._init_weight(w, weight.init_zeros, n)
+        self._init_weight(w, n, w_init_func)
 
         is_all_x_right = False
         correct_num = 0
@@ -49,10 +49,10 @@ class PLA(Model):
                 y_predict = self._decision_function(x_one)
 
                 if y_predict != y_one:
-                    w += self._learning_rate * y_one * x_one
+                    self._w += self._learning_rate * y_one * x_one
                     self._halt_step += 1
                     correct_num = 0
-                    logger.info('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
+                    # logger.info('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
                 else:
                     correct_num += 1
 
@@ -61,8 +61,8 @@ class PLA(Model):
                     break
 
         logger.info('-------------------------------------')
-        logger.info('total _halt_step is ', self.halt_step_)
-        logger.info('the training accuracy is ', scores.cal_accuracy(X, y, self.w_))
+        logger.info('total _halt_step is %d', self.halt_step_)
+        logger.info('the training accuracy is %f', scores.cal_accuracy(X, y, self.w_))
         logger.info('-------------------------------------')
 
         return self
