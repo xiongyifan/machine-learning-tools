@@ -15,7 +15,7 @@ class PocketTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_PLA_fit(self):
+    def test_Pocket_fit(self):
         x_train, y_train, x_test, y_test, m, n = self.__data_hw1_18()
 
         times = 2000
