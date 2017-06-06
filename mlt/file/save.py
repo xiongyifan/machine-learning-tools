@@ -12,3 +12,8 @@ def to_csv(data, path):
     path : str
     """
     data.to_csv(path, index=False)
+
+
+def to_csv1(d, path):
+    df = pd.DataFrame(d)
+    to_csv(df, path)
